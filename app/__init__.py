@@ -7,8 +7,10 @@ from config import Config
 
 socketio = SocketIO()
 
+
 def create_app():
-    app = Flask(__name__)
+    # 修改静态目录路径
+    app = Flask(__name__, static_folder='C:\\Users\\Administrator\\Desktop\\FlaskConnect\\save')
     app.config.from_object(Config)
 
     # 注册蓝图

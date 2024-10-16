@@ -1,15 +1,12 @@
 import os
 import base64
 
-def save_image_from_base64(image_data, file_path):
-    """
-    将 Base64 编码的图像数据保存为文件。
-    """
-    with open(file_path, 'wb') as f:
-        f.write(base64.b64decode(image_data))
+from flask import url_for, current_app
 
-def generate_image_url(file_path):
-    """
-    根据文件路径生成可访问的 URL。
-    """
-    return f'/static/uploads/{os.path.basename(file_path)}'
+
+def generate_url(file_path):
+    relative_path = os.path.relpath(file_path, current_app.static_folder)
+    relative_path = relative_path.replace('\\', '/')  # 替换为 URL 友好的分隔符
+    # 使用 Flask 的 url_for 生成静态文件的 URL
+    # 假设你的静态文件都在 'static' 目录下，这个目录在你的 Flask app 配置中设置为 static_folder
+    return url_for('static', filename=relative_path, _external=True)

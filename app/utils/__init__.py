@@ -1,1 +1,1 @@
-from app.utils.to_url import save_image_from_base64
+from app.utils.to_url import generate_url
