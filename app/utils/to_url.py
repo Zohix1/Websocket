@@ -10,3 +10,4 @@ def generate_url(file_path):
     # 使用 Flask 的 url_for 生成静态文件的 URL
     # 假设你的静态文件都在 'static' 目录下，这个目录在你的 Flask app 配置中设置为 static_folder
     return url_for('static', filename=relative_path, _external=True)
+

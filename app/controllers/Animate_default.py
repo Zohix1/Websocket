@@ -1,31 +1,35 @@
 from flask_socketio import emit
 
-from app.services.segment import SegmentationService
-from app.services.analyse import AnalyseService
+from app.services.animate import AnimateService
+
+from app.services.generate_bvh import GenerateBvhService
 
 
 # TODO:走路动画统一使用预制bvh，待机动画通过momask进行生成，可以生成多个动作
 
-class ImageProcess:
-    def __init__(self):
-        self.segmentation_service = SegmentationService()
-        self.analyse_service = AnalyseService()
+class AnimatedProcess:
+    def __init__(self, animate_service):
+        self.animate_service = animate_service
 
-    def handle_segmentation(self, image_data, text_prompt, usr):
-        """
-        接受图像数据、文本提示和用户标识，处理图像分割任务。
-        在任务完成后启动进一步的逐个图像处理，并通过 WebSocket 逐个返回结果。
-        """
+        self.generate_bvh_service = GenerateBvhService()
 
-        # 定义逐个处理后的结果回调函数
-        def image_processed_callback(result):
+    def handle_segmentation(self, image_url, action_prompt_1, action_prompt_2, usr):
+        """
+        按照顺序生成默认动作、待机动作和个性化动作
+        """
+        def animate_default_callback(result):
             emit('image_processed', {'usr': usr, 'result': result})
 
-        # 图像分割任务完成后的回调，接收分割后的图像列表，并逐个处理
-        def segmentation_completed_callback(output_path):
-            # 对逐个图像进行进一步处理
-            self.analyse_service.process_segmented_images(output_path, image_processed_callback)
+        def animate_usingtext_callback(bvh_path):
+            self.animate_service.process_animate_task(image_url, bvh_path, usr, animate_default_callback)
 
-        # 调用图像分割任务
-        self.segmentation_service.process_segmentation_task(image_data, text_prompt, usr,
-                                                            segmentation_completed_callback)
+        # 生成跑动动作
+        run_bvh_path = 'C:\\Users\\Administrator\\Desktop\\AnimatedDrawings\\examples\\bvh\\rokoko\\running.bvh'
+
+        self.animate_service.process_animate_task(image_url, run_bvh_path, usr, animate_default_callback)
+
+        # 生成动作1（待机）
+        self.generate_bvh_service.process_generate_bvh_task(action_prompt_1, usr, animate_usingtext_callback)
+
+        # 生成动作2（自定义动作）
+        self.generate_bvh_service.process_generate_bvh_task(action_prompt_1, usr, animate_usingtext_callback)
