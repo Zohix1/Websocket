@@ -18,7 +18,7 @@ class AnimatedProcess:
         按照顺序生成默认动作、待机动作和个性化动作
         """
         def animate_default_callback(result):
-            emit('image_processed', {'usr': usr, 'result': result})
+            emit('animate_default', {'usr': usr, 'result': result})
 
         def animate_usingtext_callback(bvh_path):
             self.animate_service.process_animate_task(image_url, bvh_path, usr, animate_default_callback)

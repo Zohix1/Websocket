@@ -13,7 +13,7 @@ class ImageProcess:
         处理图像分割，并在图像分割后进行进一步分析。
         """
         def image_processed_callback(result):
-            emit('image_processed', {'usr': usr, 'result': result})
+            emit('segment_paintings', {'usr': usr, 'result': result})
 
         def segmentation_completed_callback(output_path):
             # 分割任务完成后，初始化 AnalyseService

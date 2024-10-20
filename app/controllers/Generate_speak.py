@@ -5,7 +5,7 @@ from app.services.text_to_speech import TextToSpeechService
 from flask_socketio import emit
 
 
-class TextController:
+class GenerateSpeakingController:
     def __init__(self):
         self.text_service = TextGenerationService()
         self.tts_service = TextToSpeechService()

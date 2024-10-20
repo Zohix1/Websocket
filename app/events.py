@@ -1,12 +1,13 @@
 from app import socketio
 from app.controllers.Image_process import ImageProcess
-from app.controllers.Generate_speak import TextController
 from app.controllers.Animate_default import AnimatedProcess
+from app.controllers.Generate_speak import GenerateSpeakingController
 
 # 实例化控制器
 segmentation_controller = ImageProcess()
-text_controller = TextController()
+generate_speaking_controller = GenerateSpeakingController()
 animation_controller = AnimatedProcess()
+
 
 
 @socketio.on('segment_paintings')
@@ -36,6 +37,19 @@ def handle_animate_default(data):
 
     # 调用控制器处理图像分割任务
     animation_controller.handle_segmentation(image_url, action_prompt_1,action_prompt_2, usr)
+
+@socketio.on('generate_speak')
+def handle_generate_speaking(data):
+    """
+    接收来自客户端的 WebSocket 消息，为角色生成默认的一套动作
+    """
+    # 上传数据为图像分析中的动作Prompt，共包含两个
+    image_url = data['url']  # 人物图片url
+    charactor_prompt = data['action1']  # 性格Prompt
+    # usr = data['usr']  # 用户身份标识
+
+    # 调用控制器生成角色对话id
+    generate_speaking_controller
 
 
 @socketio.on('start_streaming_task')
